@@ -20,6 +20,7 @@ namespace ColourPicker
         {
             InitializeComponent();
             lastLocaion = Cursor.Position;
+            resetTip();
 
             // Set a timer to update colour every 10ms
             Timer t = new Timer();
@@ -34,10 +35,16 @@ namespace ColourPicker
             Console.WriteLine(curr);
             // Same location don't update anything
             if (lastLocaion.X == curr.X && lastLocaion.Y == curr.Y) return;
+            lastLocaion = curr;
 
             // Update panel colour
             updateColour(GetColorAt(curr));
+            resetTip();
+        }
 
+        private void resetTip()
+        {
+            tipLabel.Text = "Ctrl + C to copy current colour\nIt only works if this window is being focused";
         }
 
         /// <summary>
@@ -51,7 +58,12 @@ namespace ColourPicker
             colourPanel.BackColor = c;
 
             // Get RGB and HEX string
-            colorLabel.Text = RGBConverter(c) + "\n" + HexConverter(c);
+            colorLabel.Text = getFormattedColour(c);
+        }
+
+        private string getFormattedColour(Color c)
+        {
+            return RGBConverter(c) + "\n" + HexConverter(c);
         }
 
         /// <summary>
@@ -59,7 +71,7 @@ namespace ColourPicker
         /// </summary>
         /// <param name="c">Colour</param>
         /// <returns>A string like #123456</returns>
-        private static string HexConverter(Color c)
+        private string HexConverter(Color c)
         {
             return string.Format("#{0}{1}{2}", c.R.ToString("X2"), c.G.ToString("X2"), c.B.ToString("X2"));
         }
@@ -69,9 +81,9 @@ namespace ColourPicker
         /// </summary>
         /// <param name="c">Color</param>
         /// <returns>A string like RGB(0, 0, 0)</returns>
-        private static string RGBConverter(Color c)
+        private string RGBConverter(Color c)
         {
-            return string.Format("RGB({0}, {1}, {2})\n", c.R, c.G, c.B);
+            return string.Format("RGB({0}, {1}, {2})", c.R, c.G, c.B);
         }
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -95,6 +107,15 @@ namespace ColourPicker
             int a = (int)GetPixel(dc, p.X, p.Y);
             ReleaseDC(desk, dc);
             return Color.FromArgb(255, (a >> 0) & 0xff, (a >> 8) & 0xff, (a >> 16) & 0xff);
+        }
+
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.C)
+            {
+                Clipboard.SetText(getFormattedColour(currColour));
+                tipLabel.Text = "Copied :)";
+            }
         }
     }
 }
