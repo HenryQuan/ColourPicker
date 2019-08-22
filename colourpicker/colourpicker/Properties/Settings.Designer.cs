@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace colourpicker.Properties
+namespace ColourPicker.Properties
 {
 
 
