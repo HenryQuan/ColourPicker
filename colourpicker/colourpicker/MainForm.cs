@@ -21,6 +21,7 @@ namespace ColourPicker
             InitializeComponent();
             lastLocaion = Cursor.Position;
 
+            // Set a timer to update colour every 10ms
             Timer t = new Timer();
             t.Interval = 10;
             t.Enabled = true;
@@ -39,8 +40,13 @@ namespace ColourPicker
 
         }
 
+        /// <summary>
+        /// Update colour, panel and label
+        /// </summary>
+        /// <param name="c">Color</param>
         private void updateColour(Color c)
         {
+            // Update currColour and colourPanel back colour
             currColour = c;
             colourPanel.BackColor = c;
 
@@ -48,11 +54,21 @@ namespace ColourPicker
             colorLabel.Text = RGBConverter(c) + "\n" + HexConverter(c);
         }
 
+        /// <summary>
+        /// Convert COlor to HEX format, from https://stackoverflow.com/questions/2395438/convert-system-drawing-color-to-rgb-and-hex-value
+        /// </summary>
+        /// <param name="c">Colour</param>
+        /// <returns>A string like #123456</returns>
         private static string HexConverter(Color c)
         {
             return string.Format("#{0}{1}{2}", c.R.ToString("X2"), c.G.ToString("X2"), c.B.ToString("X2"));
         }
 
+        /// <summary>
+        /// Convert Color to RGB format
+        /// </summary>
+        /// <param name="c">Color</param>
+        /// <returns>A string like RGB(0, 0, 0)</returns>
         private static string RGBConverter(Color c)
         {
             return string.Format("RGB({0}, {1}, {2})\n", c.R, c.G, c.B);
