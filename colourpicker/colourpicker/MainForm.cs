@@ -45,7 +45,17 @@ namespace ColourPicker
             colourPanel.BackColor = c;
 
             // Get RGB and HEX string
-            colorLabel.Text = string.Format("RGB({0}, {1}, {2})", c.R, c.G, c.B);
+            colorLabel.Text = RGBConverter(c) + "\n" + HexConverter(c);
+        }
+
+        private static string HexConverter(Color c)
+        {
+            return string.Format("#{0}{1}{2}", c.R.ToString("X2"), c.G.ToString("X2"), c.B.ToString("X2"));
+        }
+
+        private static string RGBConverter(Color c)
+        {
+            return string.Format("RGB({0}, {1}, {2})\n", c.R, c.G, c.B);
         }
 
         [DllImport("user32.dll", SetLastError = true)]
